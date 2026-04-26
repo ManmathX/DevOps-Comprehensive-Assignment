@@ -1,0 +1,25 @@
+version: '3.8'
+
+
+services:
+ app:
+   build: .
+   ports:
+     - "80:80"
+   environment:
+     - PORT=80
+     - MONGO_URI=mongodb://db:27017/devops
+   depends_on:
+     - db
+   restart: always
+
+
+ db:
+   image: mongo:7
+   volumes:
+     - mongo_data:/data/db
+   restart: always
+
+
+volumes:
+ mongo_data:
