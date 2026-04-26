@@ -1,17 +1,19 @@
-
-
-from node:20-alpine as frontend-builder
-copy frontend/package*.json ./
-run npm install
-copy frontend/ ./
-run npm run build
-
-from node:20-alpine as backend-builder
-workdir /app/backend
-copy backend/package*.json ./
+FROM node:18 AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
 RUN npm install
-run npm install -g pm2
-copy backend/ ./
-copy --from=frontend-builder /app/frontend/dist /app/frontend/dist
-expose 80
+COPY frontend/ ./
+RUN npm run build
+FROM node:18 AS backend
+WORKDIR /app/backend
+
+COPY backend/package*.json ./
+RUN npm install
+RUN npm install -g pm2
+
+COPY backend/ ./
+
+COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
+
+EXPOSE 80
 CMD ["pm2-runtime", "server.js"]
