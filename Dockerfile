@@ -1,12 +1,12 @@
 
 
-from node:20-alpine 
+from node:20-alpine as frontend-builder
 copy frontend/package*.json ./
 run npm install
 copy frontend/ ./
 run npm run build
 
-from node:20-alpine
+from node:20-alpine as backend-builder
 workdir /app/backend
 copy backend/package*.json ./
 RUN npm install
