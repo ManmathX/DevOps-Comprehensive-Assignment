@@ -14,7 +14,6 @@ workdir /app/backend
 copy backend/package*.json ./
 RUN npm install
 
-
 run npm install -g pm2
 
 
